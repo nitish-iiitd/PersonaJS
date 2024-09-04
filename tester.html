@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PersonaJS Example</title>
+  <script src="persona.js"></script>
+  <link href="persona.css" rel="stylesheet">
+</head>
+<body>
+<div id="persona"></div>
+<script>
+  const data = {
+    name: "John Doe",
+    title: "Web Developer",
+    description: "Passionate web developer with 5+ years of experience.",
+    experience: ["Company A - Web Developer", "Company B - Senior Developer"]
+  };
+
+  PersonaJS.addMainContent();
+  PersonaJS.addNavbar(data.name);
+  PersonaJS.addName(data.name);
+  PersonaJS.addTitle(data.title);
+  PersonaJS.addDescription(data.description);
+  PersonaJS.addExperience(data.experience);
+</script>
+</body>
+</html>
