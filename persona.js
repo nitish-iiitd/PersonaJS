@@ -1,5 +1,4 @@
 (function(global) {
-
     // Load Bootstrap JS
     function loadBootstrapJS() {
         const script = document.createElement('script');
@@ -8,49 +7,35 @@
         document.head.appendChild(script);
     }
 
-    // HTML templates with placeholders
-    const templates = {
-        navbar: `<nav class="navbar navbar-expand-lg navbar-dark">
-                    <a class="navbar-brand" href="#" id="name">{{name}}</a>
-                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                    <div class="collapse navbar-collapse" id="navbarNav">
-                        <ul class="navbar-nav ml-auto">
-                            <li class="nav-item">
-                                <a class="nav-link" href="#about">About Me</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#projects">Projects</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#contact">Contact</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#education">Education</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#skills">Skills</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#experience">Experience</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#achievements">Achievements</a>
-                            </li>
-                        </ul>
-                    </div>
-                </nav>`,
-        main_content: `<div class="container mt-5"></div>`,
-        name: `<h1 class="persona-name">{{name}}</h1>`,
-        title: `<h2 class="persona-title">{{title}}</h2>`,
-        about_me: `<p class="persona-description">{{description}}</p>`,
-        experience: `<div class="persona-experience"><h3>Experience</h3><ul>{{experienceItems}}</ul></div>`,
-        experienceItem: `<li>{{experience}}</li>`,
-        footer: `<footer class="text-center py-3">
-                    <p>&copy; 2024 {name}. All rights reserved.</p>
-                </footer>`
-    };
+    // Function to load a template from an external file
+    function loadTemplate(templateUrl) {
+        return fetch(templateUrl)
+            .then(response => response.text())
+            .catch(err => {
+                console.error(`Error loading template: ${templateUrl}`, err);
+                return '';
+            });
+    }
+
+    // Function to replace placeholders in a template with actual values
+    function replacePlaceholders(template, values) {
+        return template.replace(/{{\s*([\w.]+)\s*}}/g, function(match, key) {
+            const keys = key.split('.'); // Split key by '.'
+            let value = values;
+
+            // Traverse through the object structure
+            keys.forEach(k => {
+                if (value && value[k] !== undefined) {
+                    value = value[k];
+                } else {
+                    value = match; // If no match, return the placeholder
+                }
+            });
+
+            return value;
+        });
+    }
+
 
     // Internal function to append content to the persona div
     function appendToPersona(html) {
@@ -62,63 +47,76 @@
         container.innerHTML += html;
     }
 
-    // Function to replace placeholders in a template with actual values
-    function replacePlaceholders(template, values) {
-        return template.replace(/{{(\w+)}}/g, function(match, key) {
-            return values[key] !== undefined ? values[key] : match;
+    // Function to add the name
+    function addIntro(name, title, about_me, profile_pic) {
+        loadTemplate('templates/introTemplate.html').then(template => {
+            const html = replacePlaceholders(template, { name, title, about_me, profile_pic });
+            appendToPersona(html);
         });
     }
 
-    function addNavbar(name) {
-        const html = replacePlaceholders(templates.navbar, { name });
-        appendToPersona(html);
-    }
-
-    function addMainContent(name) {
-        const html = replacePlaceholders(templates.main_content, { name });
-        appendToPersona(html);
-    }
-
-    function addName(name) {
-        const html = replacePlaceholders(templates.name, { name });
-        appendToPersona(html);
-    }
-
-    // Function to add the title
-    function addTitle(title) {
-        const html = replacePlaceholders(templates.title, { title });
-        appendToPersona(html);
-    }
-
-    // Function to add the description
-    function addDescription(description) {
-        const html = replacePlaceholders(templates.description, { description });
-        appendToPersona(html);
-    }
-
-    // Function to add the experience
     function addExperience(experienceArray) {
-        const experienceItems = experienceArray.map(exp => replacePlaceholders(templates.experienceItem, { experience: exp })).join('');
-        const html = replacePlaceholders(templates.experience, { experienceItems });
-        appendToPersona(html);
+        loadTemplate('templates/experienceItemTemplate.html').then(itemTemplate => {
+            const experienceItems = experienceArray.map(exp => {
+                return replacePlaceholders(itemTemplate, { exp });
+            }).join('');
+
+            loadTemplate('templates/experienceTemplate.html').then(template => {
+                const html = replacePlaceholders(template, { experienceItems });
+                appendToPersona(html);
+            });
+        });
     }
 
-    function addFooter(name) {
-        const html = replacePlaceholders(templates.footer, { name });
-        appendToPersona(html);
+    function addSkills(skillsArray) {
+        loadTemplate('templates/skillItemTemplate.html').then(itemTemplate => {
+            const skillItems = skillsArray.map(skill => {
+                return replacePlaceholders(itemTemplate, { skill });
+            }).join('');
+
+            loadTemplate('templates/skillTemplate.html').then(template => {
+                const html = replacePlaceholders(template, { skillItems });
+                appendToPersona(html);
+            });
+        });
+    }
+
+    function addProjects(projectsArray) {
+        loadTemplate('templates/projectItemTemplate.html').then(itemTemplate => {
+            const projectItems = projectsArray.map(project => {
+                return replacePlaceholders(itemTemplate, { project });
+            }).join('');
+
+            loadTemplate('templates/projectTemplate.html').then(template => {
+                const html = replacePlaceholders(template, { projectItems });
+                appendToPersona(html);
+            });
+        });
+    }
+
+    function addEducation(educationArray) {
+        loadTemplate('templates/educationItemTemplate.html').then(itemTemplate => {
+            const educationItems = educationArray.map(education => {
+                return replacePlaceholders(itemTemplate, { education });
+            }).join('');
+
+            loadTemplate('templates/educationTemplate.html').then(template => {
+                const html = replacePlaceholders(template, { educationItems });
+                appendToPersona(html);
+            });
+        });
     }
 
     // Expose the library to the global object
     global.PersonaJS = {
-        addNavbar: addNavbar,
-        addMainContent: addMainContent,
-        addName: addName,
-        addTitle: addTitle,
-        addDescription: addDescription,
+        addIntro: addIntro,
         addExperience: addExperience,
-        addFooter: addFooter
+        addSkills: addSkills,
+        addProjects: addProjects,
+        addEducation: addEducation
     };
 
+    // Load Bootstrap JS when the script is loaded
     loadBootstrapJS();
 
 }(window));

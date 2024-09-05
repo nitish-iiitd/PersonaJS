@@ -6,23 +6,191 @@
   <title>PersonaJS Example</title>
   <script src="persona.js"></script>
   <link href="persona.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/devicon@2.14.0/devicon.min.css">
 </head>
 <body>
-<div id="persona"></div>
+<div class="container mt-5">
+  <div id="persona"></div>
+</div>
 <script>
   const data = {
     name: "John Doe",
     title: "Web Developer",
-    description: "Passionate web developer with 5+ years of experience.",
-    experience: ["Company A - Web Developer", "Company B - Senior Developer"]
+    about_me: "Passionate developer with a love for creating intuitive and efficient software solutions. I enjoy working on innovative projects and continuously improving my skills.",
+    profile_pic: "https://static.vecteezy.com/system/resources/previews/007/522/850/original/business-man-icon-for-your-web-profile-free-vector.jpg",
+    experience : [
+      {
+        "organization_name" : "Newfold Digital (formerly Endurance International Group)",
+        "organization_logo" : "https://www.newfold.com/design-assets/_jcr_content/root/section_2010446581_c/responsivecolumns/column-1/image.coreimg.png/1685529184425/newfold-asset-logo.png",
+        "experience_type" : "Professional",
+        "work_duration" : "Jul'18 – Present",
+        "role" : "Lead Engineer",
+        "supervisor" : "Mr. Arnav Chaudhary",
+        "work_description" : "Part of Products Engineering Team whose main job is to integrate and maintain all hosting products for APAC region."
+      },
+      {
+        "organization_name" : "National Informatics Centre",
+        "organization_logo" : "https://uxdt.nic.in/wp-content/uploads/2020/06/NIC-LOGO-IDENTITY-VARIANTS_sans-01.png",
+        "experience_type" : "Summer Internship",
+        "work_duration" : "Jun'15 – Jul'15",
+        "role" : "Web Developer Intern",
+        "supervisor" : "Mr. Anil Sharma",
+        "work_description" : "Frontend and Backend development of Code Review Information System. Used by Scientific Officers in Cyber Security Division on a daily basis."
+      }
+    ],
+    skills : [
+      {
+        "skill_name" : "Python",
+        "logo_image" : "<i class='devicon-python-plain-wordmark colored'></i>"
+      },
+      {
+        "skill_name" : "Django",
+        "logo_image" : "<i class='devicon-django-plain colored'></i>"
+      },
+      {
+        "skill_name" : "Flask",
+        "logo_image" : "<i class='devicon-flask-original-wordmark colored'></i>"
+      },
+      {
+        "skill_name" : "Java",
+        "logo_image" : "<i class='devicon-java-plain-wordmark colored'></i>"
+      },
+      {
+        "skill_name" : "Spring",
+        "logo_image" : "<i class='devicon-spring-plain-wordmark colored'></i>"
+      },
+      {
+        "skill_name" : "Docker",
+        "logo_image" : "<i class='devicon-docker-plain-wordmark colored'></i>"
+      },
+      {
+        "skill_name" : "Android",
+        "logo_image" : "<i class='devicon-android-plain-wordmark colored'></i>"
+      },
+      {
+        "skill_name" : "HTML",
+        "logo_image" : "<i class='devicon-html5-plain-wordmark colored'></i>"
+      },
+      {
+        "skill_name" : "CSS",
+        "logo_image" : "<i class='devicon-css3-plain-wordmark colored'></i>"
+      },
+      {
+        "skill_name" : "Javascript",
+        "logo_image" : "<i class='devicon-javascript-plain colored'></i>"
+      },
+      {
+        "skill_name" : "C",
+        "logo_image" : "<i class='devicon-c-line-wordmark colored'></i>"
+      },
+      {
+        "skill_name" : "Git",
+        "logo_image" : "<i class='devicon-git-plain-wordmark colored'></i>"
+      },
+      {
+        "skill_name" : "IntelliJ",
+        "logo_image" : "<i class='devicon-intellij-plain-wordmark colored'></i>"
+      },
+      {
+        "skill_name" : "Jenkins",
+        "logo_image" : "<i class='devicon-jenkins-plain colored'></i>"
+      },
+      {
+        "skill_name" : "jQuery",
+        "logo_image" : "<i class='devicon-jquery-plain-wordmark colored'></i>"
+      },
+      {
+        "skill_name" : "Postgresql",
+        "logo_image" : "<i class='devicon-postgresql-plain-wordmark colored'></i>"
+      }
+    ],
+    projects : [
+      {
+        "project_name" : "Emotion Mining in Text",
+        "project_duration" : "(Aug,17 – Nov,17)",
+        "project_guide" : "Dr. Anubha Gupta",
+        "team_size" : "4",
+        "description" : "A system for detecting emotion from an english text, developed using supervised machine learning techniques.",
+        "language_used" : "Python",
+        "technology_used" : "Scikit Learn, Python Flask"
+      },
+      {
+        "project_name" : "JobRecS : Job Recommendation System",
+        "project_duration" : "(Aug,17 – Nov,17)",
+        "project_guide" : "Dr. Angshul Majumdar",
+        "team_size" : "2",
+        "description" : "Hybrid of collaborative filtering and content-based approach for recommending jobs.",
+        "language_used" : "Python",
+        "technology_used" : "Scikit Learn, Python Flask"
+      },
+      {
+        "project_name" : "Distance Travelled in Elevator",
+        "project_duration" : "(May,17 – Jul,17)",
+        "project_guide" : "Dr. Pushpendra Singh, Ms. Garvita Bajaj",
+        "team_size" : "2",
+        "description" : "A mobile crowdsensing android application to calculate the distance travelled by a person in an elevator using mobile’s accelerometer.",
+        "language_used" : "Java",
+        "technology_used" : "Android, Mew Crowdsensing Framework."
+      },
+
+      {
+        "project_name" : "Politesse",
+        "project_duration" : "(Feb,16 – Apr,17)",
+        "project_guide" : "Dr. Sameep Mehta (IBM Research)",
+        "team_size" : "4",
+        "description" : "A politeness detection system which can classify an English text as polite, neutral or impolite.",
+        "language_used" : "Python",
+        "technology_used" : "Scikit Learn, Python Flask, Google App Engine"
+      },
+
+      {
+        "project_name" : "InstaQuiz",
+        "project_duration" : "(Sep,16 – Nov,16)",
+        "project_guide" : "Dr. Pushpendra Singh",
+        "team_size" : "4",
+        "description" : "An android application for in-class quizzes and polling.",
+        "language_used" : "Java",
+        "technology_used" : "Android, Android Studio, Google App Engine"
+      }
+    ],
+    education : [
+      {
+        "institute" : "Indraprastha Institute of Information Technology, New Delhi",
+        "degree" : "M.tech (Data Engineering)",
+        "score_type" : "CGPA",
+        "score_value" : "8.63",
+        "duration" : "2016-2018"
+      },
+      {
+        "institute" : "Maharaja Surajmal Institute of Technology, New Delhi",
+        "degree" : "B.tech (Computer Science and Engineering)",
+        "score_type" : "CPI (Cumulative Performance Index)",
+        "score_value" : "83.67",
+        "duration" : "2012-2016"
+      },
+      {
+        "institute" : "Sanatan Dharam Public School, New Delhi",
+        "degree" : "Class 12th",
+        "score_type" : "Percentage",
+        "score_value" : "83.20",
+        "duration" : "2011-2012"
+      },
+      {
+        "institute" : "Sanatan Dharam Public School, New Delhi",
+        "degree" : "Class 10th",
+        "score_type" : "CGPA",
+        "score_value" : "9.00",
+        "duration" : "2009-2010"
+      }
+    ]
   };
 
-  PersonaJS.addMainContent();
-  PersonaJS.addNavbar(data.name);
-  PersonaJS.addName(data.name);
-  PersonaJS.addTitle(data.title);
-  PersonaJS.addDescription(data.description);
+  PersonaJS.addIntro(data.name, data.title, data.about_me, data.profile_pic);
   PersonaJS.addExperience(data.experience);
+  PersonaJS.addSkills(data.skills);
+  PersonaJS.addProjects(data.projects);
+  PersonaJS.addEducation(data.education);
+
 </script>
 </body>
 </html>
