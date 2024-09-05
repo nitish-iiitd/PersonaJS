@@ -1,7 +1,8 @@
 (function(global) {
 
     const base_url = "https://nitish-iiitd.github.io/PersonaJS/";
-    // Load Bootstrap JS
+    //const base_url = "";
+
     function loadBootstrapJS() {
         const script = document.createElement('script');
         script.src = 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js';
@@ -9,7 +10,7 @@
         document.head.appendChild(script);
     }
 
-    // Function to load a template from an external file
+
     function loadTemplate(templateUrl) {
         return fetch(templateUrl)
             .then(response => response.text())
@@ -19,7 +20,7 @@
             });
     }
 
-    // Function to replace placeholders in a template with actual values
+
     function replacePlaceholders(template, values) {
         return template.replace(/{{\s*([\w.]+)\s*}}/g, function(match, key) {
             const keys = key.split('.'); // Split key by '.'
@@ -39,7 +40,6 @@
     }
 
 
-    // Internal function to append content to the persona div
     function appendToPersona(html) {
         const container = document.getElementById('persona');
         if (!container) {
@@ -49,7 +49,6 @@
         container.innerHTML += html;
     }
 
-    // Function to add the name
     function addIntro(name, title, about_me, profile_pic) {
         loadTemplate(base_url+'templates/introTemplate.html').then(template => {
             const html = replacePlaceholders(template, { name, title, about_me, profile_pic });
