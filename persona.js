@@ -1,4 +1,6 @@
 (function(global) {
+
+    const base_url = "https://nitish-iiitd.github.io/PersonaJS/";
     // Load Bootstrap JS
     function loadBootstrapJS() {
         const script = document.createElement('script');
@@ -49,19 +51,19 @@
 
     // Function to add the name
     function addIntro(name, title, about_me, profile_pic) {
-        loadTemplate('templates/introTemplate.html').then(template => {
+        loadTemplate(base_url+'templates/introTemplate.html').then(template => {
             const html = replacePlaceholders(template, { name, title, about_me, profile_pic });
             appendToPersona(html);
         });
     }
 
     function addExperience(experienceArray) {
-        loadTemplate('templates/experienceItemTemplate.html').then(itemTemplate => {
+        loadTemplate(base_url+'templates/experienceItemTemplate.html').then(itemTemplate => {
             const experienceItems = experienceArray.map(exp => {
                 return replacePlaceholders(itemTemplate, { exp });
             }).join('');
 
-            loadTemplate('templates/experienceTemplate.html').then(template => {
+            loadTemplate(base_url+'templates/experienceTemplate.html').then(template => {
                 const html = replacePlaceholders(template, { experienceItems });
                 appendToPersona(html);
             });
@@ -69,12 +71,12 @@
     }
 
     function addSkills(skillsArray) {
-        loadTemplate('templates/skillItemTemplate.html').then(itemTemplate => {
+        loadTemplate(base_url+'templates/skillItemTemplate.html').then(itemTemplate => {
             const skillItems = skillsArray.map(skill => {
                 return replacePlaceholders(itemTemplate, { skill });
             }).join('');
 
-            loadTemplate('templates/skillTemplate.html').then(template => {
+            loadTemplate(base_url+'templates/skillTemplate.html').then(template => {
                 const html = replacePlaceholders(template, { skillItems });
                 appendToPersona(html);
             });
@@ -82,12 +84,12 @@
     }
 
     function addProjects(projectsArray) {
-        loadTemplate('templates/projectItemTemplate.html').then(itemTemplate => {
+        loadTemplate(base_url+'templates/projectItemTemplate.html').then(itemTemplate => {
             const projectItems = projectsArray.map(project => {
                 return replacePlaceholders(itemTemplate, { project });
             }).join('');
 
-            loadTemplate('templates/projectTemplate.html').then(template => {
+            loadTemplate(base_url+'templates/projectTemplate.html').then(template => {
                 const html = replacePlaceholders(template, { projectItems });
                 appendToPersona(html);
             });
@@ -95,12 +97,12 @@
     }
 
     function addEducation(educationArray) {
-        loadTemplate('templates/educationItemTemplate.html').then(itemTemplate => {
+        loadTemplate(base_url+'templates/educationItemTemplate.html').then(itemTemplate => {
             const educationItems = educationArray.map(education => {
                 return replacePlaceholders(itemTemplate, { education });
             }).join('');
 
-            loadTemplate('templates/educationTemplate.html').then(template => {
+            loadTemplate(base_url+'templates/educationTemplate.html').then(template => {
                 const html = replacePlaceholders(template, { educationItems });
                 appendToPersona(html);
             });
