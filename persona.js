@@ -95,6 +95,11 @@
         queueTemplateRender('introTemplate', { name, title, about_me, profile_pic });
     }
 
+    function addContact(phone, email) {
+        console.log("addContact");
+        queueTemplateRender('contactTemplate', { phone, email });
+    }
+
     function addExperience(experienceArray) {
         console.log("addExperience");
         queueListTemplateRender('experienceTemplate', 'experienceItemTemplate', experienceArray, 'experience');
@@ -140,6 +145,7 @@
     // Expose the library to the global object
     global.PersonaJS = {
         addIntro: addIntro,
+        addContact: addContact,
         addExperience: addExperience,
         addSkills: addSkills,
         addProjects: addProjects,
