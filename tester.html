@@ -186,14 +186,32 @@
         "score_value" : "9.00",
         "duration" : "2009-2010"
       }
+    ],
+    social : [
+      {
+        "platform_name" : "LinkedIn",
+        "profile_url" : "https://www.linkedin.com/in/nitish-srivastava-353a61129/"
+      },
+      {
+        "platform_name" : "Github",
+        "profile_url" : "https://github.com/nitish-iiitd"
+      },
+      {
+        "platform_name" : "Facebook",
+        "profile_url" : "https://www.facebook.com/nitish.srivastava.10"
+      }
     ]
   };
 
   PersonaJS.addIntro(data.name, data.title, data.about_me, data.profile_pic);
+  PersonaJS.addSocial(data.social);
   PersonaJS.addExperience(data.experience);
   PersonaJS.addSkills(data.skills);
   PersonaJS.addProjects(data.projects);
   PersonaJS.addEducation(data.education);
+  PersonaJS.addFooter(data.name);
+
+  PersonaJS.render();
 
 </script>
 </body>
