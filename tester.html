@@ -165,7 +165,7 @@
       {
         "institute_logo" : "https://www.msit.in/static/img/msit.png",
         "institute" : "Maharaja Surajmal Institute of Technology, New Delhi",
-        "degree" : "B.tech (Computer Science and Engineering)",
+        "degree" : "B.tech (Computer Science)",
         "score_type" : "CPI (Cumulative Performance Index)",
         "score_value" : "83.67",
         "duration" : "2012-2016"
@@ -190,16 +190,29 @@
     social : [
       {
         "platform_name" : "LinkedIn",
+        "platform_logo_bi_class" : "linkedin",
         "profile_url" : "https://www.linkedin.com/in/nitish-srivastava-353a61129/"
       },
       {
         "platform_name" : "Github",
+        "platform_logo_bi_class" : "github",
         "profile_url" : "https://github.com/nitish-iiitd"
       },
       {
         "platform_name" : "Facebook",
+        "platform_logo_bi_class" : "facebook",
         "profile_url" : "https://www.facebook.com/nitish.srivastava.10"
       }
+    ],
+    "achievements" : [
+      "Secured City Rank-1 and AIR-3 in Indian Engineering Olympiad - 2016 (Computer Science).",
+      "Published “Create and Deploy a Java Web App to GAE” article on wikiHow with a “Rising Star” award and 15,000+ views.",
+      "Published “Create and Deploy a Simple Ruby on Rails App” article on wikiHow having 7500+ views.",
+      "Lead as Event Head of the event “Brainstorm 2015” of MSIT Annual Fest - Avensis 2015.",
+      "“Brainstorm 2015” awarded as Best Event in Technical Department of Avensis 2015.",
+      "Awarded as Best Volunteer in Technical Department of Avensis 2015.",
+      "Won Best Project Award in Summer Training at “OSAHUB Technologies” in 2014.",
+      "Won Best Student 2011-12 Award in School."
     ]
   };
 
@@ -209,6 +222,7 @@
   PersonaJS.addSkills(data.skills);
   PersonaJS.addProjects(data.projects);
   PersonaJS.addEducation(data.education);
+  PersonaJS.addAchievement(data.achievements);
   PersonaJS.addFooter(data.name);
 
   PersonaJS.render();

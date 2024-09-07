@@ -1,14 +1,16 @@
-<div class="card mb-4 shadow-sm">
-    <div class="row no-gutters">
-        <div class="col-md-4 d-flex align-items-center justify-content-center">
-            <img src="{{ education.institute_logo }}" class="card-img" alt="{{ education.institute }}" style="max-height: 120px; max-width: 120px;">
-        </div>
-        <div class="col-md-8">
-            <div class="card-body">
-                <h3 class="card-title">{{ education.degree }}</h3>
-                <p class="card-text"><strong>Institute:</strong> {{ education.institute }}</p>
-                <p class="card-text"><strong>Score:</strong> {{ education.score_value }} {{ education.score_type }}</p>
-                <p class="card-text"><strong>Duration:</strong> {{ education.duration }}</p>
+<div class="col-md-6">
+    <div class="card mb-4 shadow-sm">
+        <div class="row no-gutters">
+            <div class="col-md-4 d-flex align-items-center justify-content-center">
+                <img src="{{ education.institute_logo }}" class="card-img" alt="{{ education.institute }}" style="max-height: 120px; max-width: 120px;">
+            </div>
+            <div class="col-md-8">
+                <div class="card-body">
+                    <h3 class="card-title">{{ education.degree }}</h3>
+                    <p class="card-text"><strong>Institute:</strong> {{ education.institute }}</p>
+                    <p class="card-text"><strong>Score:</strong> {{ education.score_value }} {{ education.score_type }}</p>
+                    <p class="card-text"><strong>Duration:</strong> {{ education.duration }}</p>
+                </div>
             </div>
         </div>
     </div>

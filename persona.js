@@ -13,7 +13,6 @@
         }
     }
 
-
     function loadBootstrapJS() {
         const script = document.createElement('script');
         script.src = 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js';
@@ -59,7 +58,6 @@
         });
     }
 
-
     function appendToPersona(html) {
         const container = document.getElementById(containerId);
         if (!container) {
@@ -92,8 +90,6 @@
         });
     }
 
-
-
     function addIntro(name, title, about_me, profile_pic) {
         console.log("addIntro");
         queueTemplateRender('introTemplate', { name, title, about_me, profile_pic });
@@ -124,6 +120,11 @@
         queueListTemplateRender('socialTemplate','socialItemTemplate', socialArray, "social");
     }
 
+    function addAchievement(achievementArray) {
+        console.log("addAchievement");
+        queueListTemplateRender('achievementTemplate','achievementItemTemplate', achievementArray, "achievement");
+    }
+
     function addFooter(name) {
         console.log("addFooter");
         queueTemplateRender('footerTemplate', { name });
@@ -136,7 +137,6 @@
         });
     }
 
-
     // Expose the library to the global object
     global.PersonaJS = {
         addIntro: addIntro,
@@ -145,6 +145,7 @@
         addProjects: addProjects,
         addEducation: addEducation,
         addSocial: addSocial,
+        addAchievement: addAchievement,
         addFooter: addFooter,
         render: render
     };
