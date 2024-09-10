@@ -20,6 +20,13 @@
         document.head.appendChild(script);
     }
 
+    function loadMustacheJS() {
+        const script = document.createElement('script');
+        script.src = 'https://cdn.jsdelivr.net/npm/mustache@4.2.0/mustache.min.js';
+        script.async = true;
+        document.head.appendChild(script);
+    }
+
     function getPersonaHostURL() {
         // Get the URL of the currently loaded persona.js file
         const script = document.querySelector('script[src*="persona.js"]');
@@ -40,24 +47,6 @@
             });
     }
 
-    function replacePlaceholders(template, values) {
-        return template.replace(/{{\s*([\w.]+)\s*}}/g, function(match, key) {
-            const keys = key.split('.'); // Split key by '.'
-            let value = values;
-
-            // Traverse through the object structure
-            keys.forEach(k => {
-                if (value && value[k] !== undefined) {
-                    value = value[k];
-                } else {
-                    value = match; // If no match, return the placeholder
-                }
-            });
-
-            return value;
-        });
-    }
-
     function appendToPersona(html) {
         const container = document.getElementById(containerId);
         if (!container) {
@@ -68,24 +57,22 @@
     }
 
     function queueTemplateRender(templateName, data) {
-        console.log("queueTemplateRender => "+templateName);
+        console.log("queueTemplateRender => " + templateName);
         addToQueue(async () => {
             const template = await loadTemplate(templateName); // Await the template loading
-            const html = replacePlaceholders(template, data);
+            const html = Mustache.render(template, data); // Render the template using Mustache.js
             appendToPersona(html);
         });
     }
 
     function queueListTemplateRender(parentTemplateName, itemTemplateName, dataArray, itemKey) {
-        console.log("queueListTemplateRender => "+parentTemplateName);
+        console.log("queueListTemplateRender => " + parentTemplateName);
         addToQueue(async () => {
             const itemTemplate = await loadTemplate(itemTemplateName); // Await the item template loading
-            const itemsHtml = dataArray.map(item => {
-                return replacePlaceholders(itemTemplate, { [itemKey]: item });
-            }).join('');
+            const itemsHtml = dataArray.map(item => Mustache.render(itemTemplate, { [itemKey]: item })).join(''); // Use Mustache.render for each item
 
             const parentTemplate = await loadTemplate(parentTemplateName); // Await the parent template loading
-            const html = replacePlaceholders(parentTemplate, { [itemKey + 'Items'] : itemsHtml });
+            const html = Mustache.render(parentTemplate, { [itemKey + 'Items']: itemsHtml }); // Render the parent template
             appendToPersona(html);
         });
     }
@@ -174,7 +161,8 @@
         render: render
     };
 
-    // Load Bootstrap JS when the script is loaded
+    // Load Bootstrap JS, Mustache JS when the script is loaded
     loadBootstrapJS();
+    loadMustacheJS();
 
 }(window));
