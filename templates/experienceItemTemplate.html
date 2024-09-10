@@ -8,7 +8,9 @@
                 <h3 class="card-title">{{ experience.role }}</h3>
                 <h5 class="card-subtitle mb-2 text-muted">{{ experience.organization_name }}</h5>
                 <p class="card-text"><strong>Duration:</strong> {{ experience.work_duration }}</p>
+                {{#experience.supervisor}} <!-- Conditional block: rendered if supervisor exists -->
                 <p class="card-text"><strong>Supervisor:</strong> {{ experience.supervisor }}</p>
+                {{/experience.supervisor}}
                 <p class="card-text">{{ experience.work_description }}</p>
             </div>
         </div>
