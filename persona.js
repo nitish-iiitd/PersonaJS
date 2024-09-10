@@ -130,6 +130,21 @@
         queueListTemplateRender('achievementTemplate','achievementItemTemplate', achievementArray, "achievement");
     }
 
+    function addInterest(interestArray) {
+        console.log("addInterest");
+        queueListTemplateRender('interestTemplate','interestItemTemplate', interestArray, "interest");
+    }
+
+    function addPublication(publicationArray) {
+        console.log("addPublication");
+        queueListTemplateRender('publicationTemplate','publicationItemTemplate', publicationArray, "publication");
+    }
+
+    function addTraining(trainingArray) {
+        console.log("addTraining");
+        queueListTemplateRender('trainingTemplate','trainingItemTemplate', trainingArray, "training");
+    }
+
     function addFooter(name) {
         console.log("addFooter");
         queueTemplateRender('footerTemplate', { name });
@@ -152,6 +167,9 @@
         addEducation: addEducation,
         addSocial: addSocial,
         addAchievement: addAchievement,
+        addInterest: addInterest,
+        addPublication: addPublication,
+        addTraining: addTraining,
         addFooter: addFooter,
         render: render
     };
