@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
+    <title>PersonaJS - Documentation</title>
+
+    <!-- CSS  -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/atom-one-dark.min.css">
+    <style>
+        :root {
+            --primary-color: #149eca;
+            --secondary-color: #087ea4;
+            --background-color: #23272f;
+            --text-color: #ffffff;
+            --sub-text: #666;
+            --code-background: #1e2127;
+            --card-background: #2a2f3a;
+        }
+
+        body {
+            background-color: var(--card-background);
+        }
+
+        .api-card {
+            background-color: var(--background-color);
+        }
+
+        .api-func {
+            color: var(--primary-color);
+        }
+
+        .param-list {
+            background-color: var(--card-background) !important;
+        }
+    </style>
+</head>
+<body>
+
+<!-- The below div (docs-dummy) is just for the testing purpose of function documentation -->
+<div id="docs-dummy" style="display: none;">
+    <div class="row">
+        <div class="col s12">
+            <div class="card api-card">
+                <div class="card-content white-text">
+                    <span class="card-title"><span class="api-func">addIntro</span> - Adds the introduction. - DUMMY</span>
+                    <ul class="collection">
+                        <li class="collection-item param-list">name - Name of the user.</li>
+                        <li class="collection-item param-list">title - Title of the user.</li>
+                        <li class="collection-item param-list">about_me - Bio of the user.</li>
+                        <li class="collection-item param-list">profile_pic - Pic of the user.</li>
+                    </ul>
+                    <div class="bg-dark border border-secondary rounded">
+                        <pre><code class="language-javascript">PersonaJS.addIntro(data.name, data.title, data.about_me, data.profile_pic);</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="docs"></div>
+
+<script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+
+<script>
+
+    $(document).ready(function() {
+        hljs.highlightAll();
+    });
+
+    // Function to extract comment blocks
+    function extractDocs(code) {
+        const functionRegex = /\/\*\*([\s\S]*?)\*\/\s*function\s+(\w+)/g;
+        let match;
+        const docs = [];
+
+        while ((match = functionRegex.exec(code)) !== null) {
+            const comment = match[1].trim();
+            const functionName = match[2];
+            const functionDoc = parseComment(comment);
+            functionDoc.name = functionName;
+            console.log(functionDoc);
+            docs.push(functionDoc);
+        }
+
+        return docs;
+    }
+
+    function parseComment(comment) {
+        const lines = comment.split('\n').map(line => line.trim().replace(/^\* ?/, ''));
+        const description = lines[0];  // First line is the function description
+
+        const params = [];
+        let example = null;
+        let capturingExample = false;
+
+        lines.slice(1).forEach(line => {
+            if (line.startsWith('@param')) {
+                // Match the parameter declaration with support for nested object syntax (e.g., experienceArray[])
+                const paramMatch = /@param {(.*?)} (\w+(\[\])?(?:\.\w+(\[\])?)*) - (.+)/.exec(line);
+                if (paramMatch) {
+                    const [_, type, name, , , description] = paramMatch;
+                    params.push({
+                        type,
+                        name,
+                        description
+                    });
+                }
+                capturingExample = false;  // Stop capturing example when a new param is found
+            } else if (line.startsWith('@example')) {
+                example = line.replace('@example ', ''); // Start capturing the example
+                capturingExample = true; // Set flag to indicate we're capturing example
+            } else if (capturingExample) {
+                // If we're capturing the example, continue appending the lines
+                example += line + '\n';
+            }
+        });
+
+        return { description, params, example };
+    }
+
+    // Function to escape special HTML characters
+    function escapeHtml(str) {
+        return str.replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+    }
+
+
+    function displayDocs(docs) {
+        const docContainer = document.getElementById('docs');
+
+        docs.forEach(doc => {
+            // Create the row and column div structure
+            const row = document.createElement('div');
+            row.className = 'row';
+
+            const col = document.createElement('div');
+            col.className = 'col s12';
+
+            // Create the card
+            const card = document.createElement('div');
+            card.className = 'card api-card';
+
+            const cardContent = document.createElement('div');
+            cardContent.className = 'card-content white-text';
+
+            // Add function name and description
+            const cardTitle = document.createElement('span');
+            cardTitle.className = 'card-title';
+            cardTitle.innerHTML = `<span class="api-func">${doc.name}</span> - ${doc.description}`;
+            cardContent.appendChild(cardTitle);
+
+            // Add parameters (if any)
+            if (doc.params.length > 0) {
+                const paramList = document.createElement('ul');
+                paramList.className = 'collection';
+
+                doc.params.forEach(param => {
+                    const paramItem = document.createElement('li');
+                    paramItem.className = 'collection-item param-list';
+                    paramItem.innerHTML = `<span class="api-func">${param.name}</span> - ${param.description}`;
+                    paramList.appendChild(paramItem);
+                });
+
+                cardContent.appendChild(paramList);
+            }
+
+            // Add usage code (if any)
+            if (doc.example) {
+                const usageCodeBlock = document.createElement('div');
+                usageCodeBlock.className = 'bg-dark border border-secondary rounded';
+
+                const pre = document.createElement('pre');
+                const code = document.createElement('code');
+                code.className = 'language-javascript';
+                code.innerText = doc.example;
+
+                pre.appendChild(code);
+                usageCodeBlock.appendChild(pre);
+
+                cardContent.appendChild(usageCodeBlock);
+            }
+
+            // Append card content to card, and then append to col and row
+            card.appendChild(cardContent);
+            col.appendChild(card);
+            row.appendChild(col);
+
+            // Append the row to the docs container
+            docContainer.appendChild(row);
+        });
+        hljs.highlightAll();
+    }
+
+
+    // Fetch the external JS file and extract documentation
+    fetch('persona.js')
+        .then(response => response.text())
+        .then(jsCode => {
+            const docs = extractDocs(jsCode);
+            displayDocs(docs);
+        })
+        .catch(error => console.error('Error loading JS file:', error));
+</script>
+</body>
+</html>
