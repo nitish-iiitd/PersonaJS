@@ -1,8 +1,3 @@
-/**
- * The PersonaJS library.
- * @namespace PersonaJS
- */
-
 (function(global) {
 
     const queue = []; // Queue to store function calls
