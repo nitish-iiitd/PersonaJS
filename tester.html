@@ -5,11 +5,58 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>PersonaJS Example</title>
   <script src="persona.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Serif:wght@400;500;600&display=swap" rel="stylesheet">
   <link href="persona.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/devicon@2.14.0/devicon.min.css">
+  <style>
+    /* Demo-only: floating mode switch (not part of the library) */
+    .persona-switch {
+      position: fixed;
+      bottom: 22px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 2000;
+      display: flex;
+      gap: 4px;
+      padding: 5px;
+      border-radius: 999px;
+      background: rgba(20, 28, 26, .72);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(255, 255, 255, .14);
+      box-shadow: 0 12px 40px -10px rgba(0, 0, 0, .5);
+      font-family: 'IBM Plex Sans', system-ui, sans-serif;
+    }
+    .persona-switch button {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      border: 0;
+      cursor: pointer;
+      padding: 9px 18px;
+      border-radius: 999px;
+      font-size: .85rem;
+      font-weight: 600;
+      color: rgba(255, 255, 255, .72);
+      background: transparent;
+      transition: background .2s ease, color .2s ease;
+    }
+    .persona-switch button:hover { color: #fff; }
+    .persona-switch button.active {
+      color: #05130d;
+      background: linear-gradient(135deg, #34d399, #10b981);
+    }
+    @media print { .persona-switch { display: none; } }
+  </style>
 </head>
 <body>
-<div class="container mt-5">
+<div class="persona-switch" id="personaSwitch" role="group" aria-label="Presentation mode">
+  <button type="button" data-mode="paper" class="active"><i class="bi bi-file-earmark-person"></i> Résumé</button>
+  <button type="button" data-mode="web"><i class="bi bi-window-fullscreen"></i> Portfolio</button>
+</div>
+<div class="persona-page">
   <div id="persona"></div>
 </div>
 <script>
@@ -249,6 +296,15 @@
   PersonaJS.addFooter(data.name);
 
   PersonaJS.render();
+
+  // Demo-only: wire the floating mode switch to the library setting
+  document.getElementById('personaSwitch').addEventListener('click', function (e) {
+    const btn = e.target.closest('button');
+    if (!btn) return;
+    PersonaJS.setTheme(btn.dataset.mode);
+    Array.from(this.children).forEach(c => c.classList.toggle('active', c === btn));
+    window.scrollTo({ top: 0, behavior: 'auto' });
+  });
 
 </script>
 </body>

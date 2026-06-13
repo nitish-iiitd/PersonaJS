@@ -1,18 +1,13 @@
-<div class="col-md-6">
-    <div class="card mb-4 shadow-sm">
-        <div class="row no-gutters">
-            <div class="col-md-4 d-flex align-items-center justify-content-center">
-                <img src="{{ education.institute_logo }}" class="card-img" alt="{{ education.institute }}" style="max-height: 120px; max-width: 120px;">
-            </div>
-            <div class="col-md-8">
-                <div class="card-body">
-                    <h3 class="card-title">{{ education.degree }}</h3>
-                    <p class="card-text"><strong>Institute:</strong> {{ education.institute }}</p>
-                    <p class="card-text"><strong>Score:</strong> {{ education.score_value }} {{ education.score_type }}</p>
-                    <p class="card-text"><strong>Duration:</strong> {{ education.duration }}</p>
-                </div>
+<div class="persona-card">
+    <div class="persona-edu">
+        <img src="{{ education.institute_logo }}" class="persona-edu__logo" alt="{{ education.institute }}">
+        <div style="flex: 1; min-width: 0;">
+            <h4 class="persona-edu__degree">{{ education.degree }}</h4>
+            <p class="persona-edu__inst">{{ education.institute }}</p>
+            <div class="persona-edu__foot">
+                <span class="persona-edu__score">{{ education.score_value }} &middot; {{ education.score_type }}</span>
+                <span class="persona-edu__date">{{ education.duration }}</span>
             </div>
         </div>
     </div>
 </div>
-

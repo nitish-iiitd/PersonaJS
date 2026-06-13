@@ -1,18 +1,17 @@
-<div class="card mb-4 shadow-sm">
-    <div class="row no-gutters">
-        <div class="col-md-4 d-flex align-items-center justify-content-center">
-            <img src="{{ experience.organization_logo }}" class="card-img" alt="{{ experience.organization_name }}">
-        </div>
-        <div class="col-md-8">
-            <div class="card-body">
-                <h3 class="card-title">{{ experience.role }}</h3>
-                <h5 class="card-subtitle mb-2 text-muted">{{ experience.organization_name }}</h5>
-                <p class="card-text"><strong>Duration:</strong> {{ experience.work_duration }}</p>
-                {{#experience.supervisor}} <!-- Conditional block: rendered if supervisor exists -->
-                <p class="card-text"><strong>Supervisor:</strong> {{ experience.supervisor }}</p>
-                {{/experience.supervisor}}
-                <p class="card-text">{{ experience.work_description }}</p>
+<div class="persona-entry">
+    <img src="{{ experience.organization_logo }}" class="persona-entry__logo" alt="{{ experience.organization_name }}">
+    <div class="persona-entry__body">
+        <div class="persona-entry__top">
+            <div>
+                <h3 class="persona-entry__role">{{ experience.role }}</h3>
+                <p class="persona-entry__org">{{ experience.organization_name }}</p>
             </div>
+            <span class="persona-entry__date">{{ experience.work_duration }}</span>
         </div>
+        <p class="persona-entry__meta">
+            <span class="persona-tag">{{ experience.experience_type }}</span>
+            {{#experience.supervisor}}<span>&nbsp;&middot;&nbsp; Reporting to {{ experience.supervisor }}</span>{{/experience.supervisor}}
+        </p>
+        <p class="persona-entry__desc">{{ experience.work_description }}</p>
     </div>
 </div>

@@ -282,6 +282,256 @@
         queueTemplateRender('footerTemplate', {name});
     }
 
+    /* ----------------------------------------------------------
+       Theming
+       Two presentation modes share the same rendered sections:
+         'paper' -> printable two-column résumé sheet (default)
+         'web'   -> immersive scrolling portfolio website
+       Switchable any time via PersonaJS.setTheme(mode).
+       ---------------------------------------------------------- */
+    let currentTheme = 'paper';
+    let rawSectionsHTML = null;   // cache of flat rendered sections
+
+    function setTheme(mode) {
+        currentTheme = (mode === 'web') ? 'web' : 'paper';
+        if (rawSectionsHTML !== null) {
+            applyTheme();
+        }
+        return currentTheme;
+    }
+
+    function captureRawSections() {
+        const container = document.getElementById(containerId);
+        if (!container) return;
+        rawSectionsHTML = Array.from(container.children)
+            .filter(el => el.tagName !== 'SCRIPT' && el.tagName !== 'STYLE')
+            .map(el => el.outerHTML);
+    }
+
+    function teardownInteractions() {
+        if (global.__personaScroll) {
+            window.removeEventListener('scroll', global.__personaScroll);
+            global.__personaScroll = null;
+        }
+        if (global.__personaObserver) {
+            global.__personaObserver.disconnect();
+            global.__personaObserver = null;
+        }
+    }
+
+    function applyTheme() {
+        const container = document.getElementById(containerId);
+        if (!container || rawSectionsHTML === null) return;
+
+        teardownInteractions();
+        container.className = '';
+        container.innerHTML = rawSectionsHTML.join('');
+
+        document.body.classList.remove('persona-mode-paper', 'persona-mode-web');
+        document.body.classList.add(currentTheme === 'web' ? 'persona-mode-web' : 'persona-mode-paper');
+
+        if (currentTheme === 'web') {
+            buildWebLayout(container);
+        } else {
+            buildPaperLayout(container);
+        }
+    }
+
+    /* ---- Paper: two-column résumé sheet ---- */
+    function buildPaperLayout(container) {
+        const sidebar = document.createElement('aside');
+        sidebar.className = 'persona-sidebar';
+        const main = document.createElement('main');
+        main.className = 'persona-main';
+        const footerWrap = document.createElement('div');
+        footerWrap.className = 'persona-footer-wrap';
+
+        Array.from(container.children).forEach(child => {
+            if (child.classList.contains('persona-aside')) {
+                sidebar.appendChild(child);
+            } else if (child.classList.contains('persona-footer')) {
+                footerWrap.appendChild(child);
+            } else {
+                main.appendChild(child);
+            }
+        });
+
+        container.innerHTML = '';
+        container.classList.add('persona-grid');
+        container.appendChild(sidebar);
+        container.appendChild(main);
+        if (footerWrap.children.length) {
+            container.appendChild(footerWrap);
+        }
+    }
+
+    /* ---- Web: immersive scrolling portfolio ---- */
+    function buildWebLayout(container) {
+        const byType = {};
+        Array.from(container.children).forEach(el => {
+            const t = el.getAttribute && el.getAttribute('data-section');
+            if (t) byType[t] = el;
+        });
+
+        const intro = byType.intro;
+        const text = sel => (intro && intro.querySelector(sel)) ? intro.querySelector(sel).textContent.trim() : '';
+        const name = text('.persona-intro__name');
+        const title = text('.persona-intro__title');
+        const about = text('.persona-intro__about');
+        const photo = (intro && intro.querySelector('.persona-intro__photo'))
+            ? intro.querySelector('.persona-intro__photo').getAttribute('src') : '';
+
+        // Social icons (reused in hero + contact)
+        let socialHTML = '';
+        if (byType.social) {
+            byType.social.querySelectorAll('.persona-social-link').forEach(a => {
+                const icon = a.querySelector('i') ? a.querySelector('i').outerHTML : '';
+                const label = a.getAttribute('aria-label') || '';
+                socialHTML += '<a href="' + a.getAttribute('href') + '" target="_blank" rel="noopener" '
+                    + 'class="persona-web-social" aria-label="' + label + '">' + icon + '</a>';
+            });
+        }
+
+        // Contact details (email href may be obfuscated by the host, so fall back to text)
+        let phone = '', email = '';
+        if (byType.contact) {
+            byType.contact.querySelectorAll('a').forEach(a => {
+                const href = a.getAttribute('href') || '';
+                const txt = a.textContent.trim();
+                if (href.indexOf('tel:') === 0) {
+                    phone = txt;
+                } else if (href.indexOf('mailto:') === 0 || txt.indexOf('@') !== -1) {
+                    email = txt;
+                }
+            });
+        }
+
+        // Progress bar
+        const progress = document.createElement('div');
+        progress.className = 'persona-web-progress';
+
+        // Nav (auto-built from body sections)
+        const navOrder = ['experience', 'projects', 'skills', 'education', 'achievements', 'publications', 'trainings', 'interests'];
+        let navLinks = '';
+        navOrder.forEach(t => {
+            if (byType[t]) {
+                const h = byType[t].querySelector('.persona-heading h2, .persona-aside-heading');
+                const label = h ? h.textContent.trim() : t;
+                navLinks += '<a href="#sec-' + t + '" class="persona-web-navlink">' + label + '</a>';
+            }
+        });
+        const nav = document.createElement('header');
+        nav.className = 'persona-web-nav';
+        nav.innerHTML =
+            '<a href="#top" class="persona-web-brand">' + name + '</a>'
+            + '<nav class="persona-web-navlinks">' + navLinks + '</nav>'
+            + '<a href="#sec-contact" class="persona-web-navcta">Get in touch</a>';
+
+        // Hero
+        const hero = document.createElement('section');
+        hero.className = 'persona-web-hero';
+        hero.id = 'top';
+        hero.innerHTML =
+            '<div class="persona-web-hero__bg" aria-hidden="true"></div>'
+            + '<div class="persona-web-hero__inner">'
+            +   '<div class="persona-web-hero__text">'
+            +     '<p class="persona-web-eyebrow">' + title + '</p>'
+            +     '<h1 class="persona-web-hero__name">' + name + '</h1>'
+            +     '<p class="persona-web-hero__about">' + about + '</p>'
+            +     '<div class="persona-web-hero__actions">'
+            +       '<a href="#sec-contact" class="persona-web-btn persona-web-btn--solid">Let&rsquo;s talk</a>'
+            +       '<a href="#sec-experience" class="persona-web-btn persona-web-btn--ghost">View my work</a>'
+            +     '</div>'
+            +     (socialHTML ? '<div class="persona-web-hero__social">' + socialHTML + '</div>' : '')
+            +   '</div>'
+            +   (photo ? '<div class="persona-web-hero__photo"><img src="' + photo + '" alt="' + name + '"></div>' : '')
+            + '</div>'
+            + '<a href="#sec-' + (byType.experience ? 'experience' : 'projects') + '" class="persona-web-scrollcue" aria-label="Scroll down"><i class="bi bi-chevron-down"></i></a>';
+
+        // Body sections (ordered)
+        const bodyWrap = document.createElement('div');
+        bodyWrap.className = 'persona-web-body';
+        const bodyOrder = ['experience', 'skills', 'projects', 'education', 'achievements', 'publications', 'trainings', 'interests'];
+        bodyOrder.forEach(t => {
+            if (byType[t]) {
+                const el = byType[t];
+                el.id = 'sec-' + t;
+                el.classList.add('persona-web-section', 'persona-reveal');
+                bodyWrap.appendChild(el);
+            }
+        });
+
+        // Contact band
+        const contact = document.createElement('section');
+        contact.className = 'persona-web-contact persona-reveal';
+        contact.id = 'sec-contact';
+        contact.innerHTML =
+            '<div class="persona-web-contact__inner">'
+            + '<p class="persona-web-eyebrow">Get in touch</p>'
+            + '<h2 class="persona-web-contact__title">Let&rsquo;s build something together.</h2>'
+            + '<div class="persona-web-contact__actions">'
+            + (email ? '<a class="persona-web-btn persona-web-btn--solid" href="mailto:' + email + '"><i class="bi bi-envelope-fill"></i> ' + email + '</a>' : '')
+            + (phone ? '<a class="persona-web-btn persona-web-btn--ghost" href="tel:' + phone + '"><i class="bi bi-telephone-fill"></i> ' + phone + '</a>' : '')
+            + '</div>'
+            + (socialHTML ? '<div class="persona-web-contact__social">' + socialHTML + '</div>' : '')
+            + '</div>';
+
+        const footer = byType.footer || null;
+
+        container.innerHTML = '';
+        container.classList.add('persona-web');
+        container.appendChild(progress);
+        container.appendChild(nav);
+        container.appendChild(hero);
+        container.appendChild(bodyWrap);
+        container.appendChild(contact);
+        if (footer) container.appendChild(footer);
+
+        initWebInteractions(container);
+    }
+
+    function initWebInteractions(container) {
+        // Scroll-reveal
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(e => {
+                if (e.isIntersecting) {
+                    e.target.classList.add('is-visible');
+                    observer.unobserve(e.target);
+                }
+            });
+        }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+        container.querySelectorAll('.persona-reveal').forEach(el => observer.observe(el));
+        global.__personaObserver = observer;
+
+        // Progress bar + scroll-spy + nav background
+        const progress = container.querySelector('.persona-web-progress');
+        const nav = container.querySelector('.persona-web-nav');
+        const navlinks = Array.from(container.querySelectorAll('.persona-web-navlink'));
+        const targets = navlinks.map(a => container.querySelector(a.getAttribute('href'))).filter(Boolean);
+
+        function onScroll() {
+            const max = document.documentElement.scrollHeight - window.innerHeight;
+            const y = window.pageYOffset || document.documentElement.scrollTop;
+            if (progress) progress.style.width = (max > 0 ? (y / max) * 100 : 0) + '%';
+            if (nav) nav.classList.toggle('is-scrolled', y > 40);
+            let activeIdx = -1;
+            targets.forEach((t, i) => {
+                if (t.getBoundingClientRect().top <= window.innerHeight * 0.35) activeIdx = i;
+            });
+            navlinks.forEach((a, i) => a.classList.toggle('is-active', i === activeIdx));
+        }
+        global.__personaScroll = onScroll;
+        window.addEventListener('scroll', onScroll, { passive: true });
+        onScroll();
+    }
+
+    /**
+     * Sets the presentation mode.
+     * @param {('paper'|'web')} mode - 'paper' (printable résumé, default) or 'web' (immersive portfolio).
+     * @example PersonaJS.setTheme('web');
+     */
+    function publicSetTheme(mode) { return setTheme(mode); }
+
     /**
      * Renders the complete page. It is required to generate the page.
      * @example PersonaJS.render();
@@ -289,6 +539,8 @@
     function render() {
         console.log("render");
         processQueue().then(() => {
+            captureRawSections();
+            applyTheme();
             console.log('All sections rendered in sequence');
         });
     }
@@ -307,6 +559,7 @@
         addPublication: addPublication,
         addTraining: addTraining,
         addFooter: addFooter,
+        setTheme: publicSetTheme,
         render: render
     };
 
